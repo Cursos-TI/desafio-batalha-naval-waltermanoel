@@ -2,7 +2,7 @@
 
 int main() {
 
-    // declarando e iniciando a matrz do tabuleiro.
+    // declarando e iniciando a matriz do tabuleiro.
     int tabuleiro [10][10];
 
     for (int i = 0; i < 10; i++) {
@@ -12,39 +12,91 @@ int main() {
         
     }
     
-    // definido variaveis de coodernadas
-    int xnavio1 = 7;
-    int ynavio1 = 2;
+    // definindo matriz com informaçoes dos navios, como coodernadas e direcao.
+    int navios[4][3] = {
+        {0, 0, 0},
+        {2, 7, 1},
+        {5, 7, 20},
+        {3, 6, 21}
+    };
 
-    int xnavio2 = 7;
-    int ynavio2 = 7;
+    // logica de posicionamento dos navios.
+    int xTemp = 0, yTemp = 0, movX = 0, movY = 0;
 
-    // logica de sobreposicao e overflow.
-    if(xnavio1 <= 7 && xnavio1 >= 0) {
-        if(ynavio1 <= 9 && ynavio1 >= 0) {
-            int x = xnavio1, y = ynavio1;
+    for (int i = 0; i < 4; i++) {
+        xTemp = navios[i][0];
+        yTemp = navios[i][1];
 
-            for (int i = 0; i < 3; i++) {
-                tabuleiro[y][x] = 3;
-                x++;
+        // Definindo a direcao do navio.
+
+        switch (navios[i][2])
+        {
+        case 0:
+            movX = 1;
+            movY = 0;
+            break;
+        
+        case 1:
+            movX = 0;
+            movY = 1;
+            break;
+
+        case 20:
+            movX = 1;
+            movY = 1;
+            break;
+
+        case 21:
+            movX = 1;
+            movY = -1;
+            break;
+        
+        default:
+            movX = 0;
+            movY = 0;
+            break;
+        }
+
+        if (movX == 0 && movY == 0) {
+            continue;
+        }
+        
+        // Verificar se existe overflow ou sobreposisao.
+        int verificado = 0;
+        for(int j = 0; j < 3; j++) {
+            if (!((tabuleiro[yTemp][xTemp] == 0) && (xTemp >= 0 && xTemp <= 9) && (yTemp >= 0 && yTemp <= 9))) {
+                verificado = 0;
+                break;
+
+            } else {
+                verificado = 1;
+                xTemp += movX;
+                yTemp += movY;
+
             }
         }
-    }
 
-    if(ynavio2 <= 7 && ynavio2 >= 0) {
-        if(xnavio2 <= 9 && xnavio2 >= 0) {
-            if((xnavio1 > xnavio2 || (xnavio1 + 2) < xnavio2) || (ynavio2 > ynavio1 || ynavio2 + 2 < ynavio1)) {
-                int x = xnavio2, y = ynavio2;
+        if (verificado) {
+            // Inserindo no tabuleiro o navio.
+            xTemp = navios[i][0];
+            yTemp = navios[i][1];
 
-                for (int i = 0; i < 3; i++) {
-                    tabuleiro[y][x] = 3;
-                    y++;
-                }
+            for (int j = 0; j < 3; j++) {
 
-            } 
+                tabuleiro[yTemp][xTemp] = 3;
+                xTemp += movX;
+                yTemp += movY;
+
+            }
+            
         }
+        
+
 
     }
+    
+    
+    
 
     // Exibindo tabuleiro processado.
     for (int i = 0; i < 10; i++) {
